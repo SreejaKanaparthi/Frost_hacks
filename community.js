@@ -1,10 +1,8 @@
 const postBtn = document.getElementById("postbtn");
 const mainContainer = document.getElementById("main-container");
-const inviteBtn = document.getElementById("inviteBtn");
-
+const inviteBtn = document.getElementById("inviteBtn"); 
 
 const savedPosts = JSON.parse(localStorage.getItem("posts")) || [];
-
 
 function createPostCard(imageData, text, index) {
   const card = document.createElement("div");
@@ -29,15 +27,12 @@ function createPostCard(imageData, text, index) {
 }
 
 function deletePost(index) {
-  
   savedPosts.splice(index, 1);
-  
   localStorage.setItem("posts", JSON.stringify(savedPosts));
-  
+
   mainContainer.innerHTML = "";
   savedPosts.forEach((post, index) => createPostCard(post.image, post.text, index));
 }
-
 
 savedPosts.forEach(post => createPostCard(post.image, post.text));
 
@@ -69,49 +64,45 @@ postBtn.addEventListener("click", () => {
     const imageFile = imageInput.files[0];
     const text = textInput.value;
 
-    
-    if (imageFile) {
-      const reader = new FileReader();
-      reader.readAsDataURL(imageFile);
-      reader.onload = () => {
-        const imageData = reader.result;
-        const post = { image: imageData, text: text };
+    if (text.trim() !== '' || imageFile) {
+      if (imageFile) {
+        const reader = new FileReader();
+        reader.readAsDataURL(imageFile);
+        reader.onload = () => {
+          const imageData = reader.result;
+          const post = { image: imageData, text: text };
+          savedPosts.push(post);
+          localStorage.setItem("posts", JSON.stringify(savedPosts));
+          createPostCard(imageData, text);
+          inputContainer.remove();
+        };
+      } else {
+        const post = { image: "", text: text };
         savedPosts.push(post);
         localStorage.setItem("posts", JSON.stringify(savedPosts));
-        createPostCard(imageData, text);
+        createPostCard("", text);
         inputContainer.remove();
-      };
+      }
     } else {
-      const post = { image: "", text: text };
-      savedPosts.push(post);
-      localStorage.setItem("posts", JSON.stringify(savedPosts));
-      createPostCard("", text);
-      inputContainer.remove();
+      alert("Please fill in at least one field (text or image).");
     }
   });
 });
 
-
 inviteBtn.addEventListener("click", () => {
-    
-    const registrationLink = "https://sreejakanaparthi.github.io/frost_hacks/"; // Replace with your actual base link
-  
-    
-    const tempInput = document.createElement("input");
-    tempInput.value = registrationLink;
-  
+  const registrationLink = "https://sreejakanaparthi.github.io/frost_hacks/ ";
+
+  const tempInput = document.createElement("input");
+  tempInput.value = registrationLink;
+
   document.body.appendChild(tempInput);
 
-  
   tempInput.select();
-  tempInput.setSelectionRange(0, 99999); // For mobile devices
+  tempInput.setSelectionRange(0, 99999); 
 
-  
   document.execCommand("copy");
 
-  
   document.body.removeChild(tempInput);
 
-  
   alert("Registration link copied!");
 });
