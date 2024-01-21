@@ -1,8 +1,6 @@
-$(document).ready(function () {
-    const inviteBtn = $("#invitebtn");
-
 const postBtn = document.getElementById("postbtn");
 const mainContainer = document.getElementById("main-container");
+const inviteBtn = document.getElementById("inviteBtn");
 
 // Retrieve saved posts from local storage
 const savedPosts = JSON.parse(localStorage.getItem("posts")) || [];
@@ -27,41 +25,22 @@ function createPostCard(imageData, text, index) {
 
   card.appendChild(deleteBtn);
 
-
   mainContainer.appendChild(card);
 }
 
 function deletePost(index) {
-    // Remove the post from the savedPosts array
-    savedPosts.splice(index, 1);
-    // Update the local storage
-    localStorage.setItem("posts", JSON.stringify(savedPosts));
-    // Remove the post card from the main container
-    mainContainer.innerHTML = "";
-    savedPosts.forEach((post, index) => createPostCard(post.image, post.text, index));
-  }
-  
+  // Remove the post from the savedPosts array
+  savedPosts.splice(index, 1);
+  // Update the local storage
+  localStorage.setItem("posts", JSON.stringify(savedPosts));
+  // Remove the post card from the main container
+  mainContainer.innerHTML = "";
+  savedPosts.forEach((post, index) => createPostCard(post.image, post.text, index));
+}
+
 // Load saved posts into the main container
 savedPosts.forEach(post => createPostCard(post.image, post.text));
 
-inviteBtn.on("click", () => {
-    // Construct the registration page link based on your file structure
-    const registrationLink = `${window.location.origin}/Register.html`;
-
-    // Create a temporary input element to copy the link
-    const tempInput = $("<input>").attr("value", registrationLink).appendTo("body").select();
-
-    // Execute the copy command
-    document.execCommand("copy");
-
-    // Remove the temporary input element
-    tempInput.remove();
-
-    // Provide feedback to the user (you can use a tooltip, alert, or any other method)
-    alert("Registration link copied!");
-  });
-
-// Event listener for "Post" button
 postBtn.addEventListener("click", () => {
   const inputContainer = document.createElement("div");
   inputContainer.classList.add("input-container");
@@ -109,7 +88,30 @@ postBtn.addEventListener("click", () => {
       createPostCard("", text);
       inputContainer.remove();
     }
-
   });
 });
+
+// Event listener for "Invite" button
+inviteBtn.addEventListener("click", () => {
+    // **Use a constant base registration link:**//
+    const registrationLink = "https://sreejakanaparthi.github.io/frost_hacks/"; // Replace with your actual base link
+  
+    // Create a temporary input element to copy the link
+    const tempInput = document.createElement("input");
+    tempInput.value = registrationLink;
+  // Append the input element to the body (it needs to be in the DOM for the `select` and `execCommand` to work)
+  document.body.appendChild(tempInput);
+
+  // Select the text inside the input
+  tempInput.select();
+  tempInput.setSelectionRange(0, 99999); // For mobile devices
+
+  // Execute the copy command
+  document.execCommand("copy");
+
+  // Remove the temporary input element
+  document.body.removeChild(tempInput);
+
+  // Provide feedback to the user (you can use a tooltip, alert, or any other method)
+  alert("Registration link copied!");
 });
